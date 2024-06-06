@@ -1,0 +1,4 @@
+data/*
+.venv/*
+requirements_fdaml.txt
+.DS_Store
