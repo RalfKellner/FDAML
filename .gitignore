@@ -2,3 +2,6 @@ data/*
 .venv/*
 requirements_fdaml.txt
 .DS_Store
+studies/*
+additional_notebooks/*
+coursebook/cluster_data.csv
