@@ -63,6 +63,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Machine learning in finance" href="06_machine_learning_in_finance.html" />
     <link rel="prev" title="Multivariate analysis - dependence matters!" href="04_dependence_matters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -178,6 +179,7 @@
 <li class="toctree-l1"><a class="reference internal" href="03_univariate_models.html">Modeling univariate asset return distributions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_dependence_matters.html">Multivariate analysis - dependence matters!</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Machine learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_machine_learning_in_finance.html">Machine learning in finance</a></li>
 </ul>
 
     </div>
@@ -699,8 +701,8 @@ R^2 = 1 - \frac{\sum_i \left( y_i - \hat{y}_i \right)^2}{\sum_i \left( y_i - \ba
 Dep. Variable:                      y   R-squared:                       0.418
 Model:                            OLS   Adj. R-squared:                  0.410
 Method:                 Least Squares   F-statistic:                     51.87
-Date:                Thu, 06 Jun 2024   Prob (F-statistic):           2.57e-25
-Time:                        11:31:09   Log-Likelihood:                 725.28
+Date:                Wed, 26 Jun 2024   Prob (F-statistic):           2.57e-25
+Time:                        16:37:55   Log-Likelihood:                 725.28
 No. Observations:                 221   AIC:                            -1443.
 Df Residuals:                     217   BIC:                            -1429.
 Df Model:                           3                                         
@@ -739,8 +741,8 @@ Notes:
 Dep. Variable:                      y   R-squared:                       0.418
 Model:                            OLS   Adj. R-squared:                  0.410
 Method:                 Least Squares   F-statistic:                     51.92
-Date:                Thu, 06 Jun 2024   Prob (F-statistic):           2.47e-25
-Time:                        11:31:09   Log-Likelihood:                 725.28
+Date:                Wed, 26 Jun 2024   Prob (F-statistic):           2.47e-25
+Time:                        16:37:55   Log-Likelihood:                 725.28
 No. Observations:                 221   AIC:                            -1443.
 Df Residuals:                     217   BIC:                            -1429.
 Df Model:                           3                                         
@@ -2326,6 +2328,7 @@ L\left( C_1, ..., C_k, X \right) = \sum_{k = 1}^K W \left( C_k \right) = \sum_{k
 <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="s2">&quot;#ff7f0e&quot;</span><span class="p">,</span> <span class="s2">&quot;#2ca02c&quot;</span><span class="p">]</span>
@@ -2334,7 +2337,7 @@ L\left( C_1, ..., C_k, X \right) = \sum_{k = 1}^K W \left( C_k \right) = \sum_{k
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;est_cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">k</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">cluster_centroids</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
@@ -2343,16 +2346,29 @@ L\left( C_1, ..., C_k, X \right) = \sum_{k = 1}^K W \left( C_k \right) = \sum_{k
         <span class="n">cluster_centroids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_tmp</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
     <span class="n">cluster_centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cluster_centroids</span><span class="p">)</span>
 
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
-        <span class="n">df_tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">]</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_tmp</span><span class="o">.</span><span class="n">x_1</span><span class="p">,</span> <span class="n">df_tmp</span><span class="o">.</span><span class="n">x_2</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">cluster</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.60</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">x_1</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">x_2</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;lightgrey&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data with cluster assignment&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data with cluster assignment&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>          
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
+            <span class="n">df_tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">est_cluster</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_tmp</span><span class="o">.</span><span class="n">x_1</span><span class="p">,</span> <span class="n">df_tmp</span><span class="o">.</span><span class="n">x_2</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">cluster</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.60</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cluster_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data with cluster assignment&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
@@ -2361,7 +2377,10 @@ L\left( C_1, ..., C_k, X \right) = \sum_{k = 1}^K W \left( C_k \right) = \sum_{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9a1ff4db3fce1618cc142ea578ac5c86bebedb12025f5e86c487037a24044a6c.png" src="_images/9a1ff4db3fce1618cc142ea578ac5c86bebedb12025f5e86c487037a24044a6c.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+</pre></div>
+</div>
+<img alt="_images/d406e4ffd24e941bb812e91dbb3ebd77de760ccf6383ed54a736756829ad00ed.png" src="_images/d406e4ffd24e941bb812e91dbb3ebd77de760ccf6383ed54a736756829ad00ed.png" />
 <img alt="_images/39735ba83a5e24988266e24a199f9d79e6164f86aa146877fa91cff1f4e2989f.png" src="_images/39735ba83a5e24988266e24a199f9d79e6164f86aa146877fa91cff1f4e2989f.png" />
 <img alt="_images/c1de20036f3f40e64ec081c93253f2ce5b7715ebd307f971f955da82dee0d3d2.png" src="_images/c1de20036f3f40e64ec081c93253f2ce5b7715ebd307f971f955da82dee0d3d2.png" />
 </div>
@@ -2424,7 +2443,7 @@ S(i) = \frac{b(i) - a(i)}{\max \lbrace a(i), b(i)\rbrace}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5c3c3e67f990bb7b7520885b2eaab479405710ac2330b89e123720eb17d07cf1.png" src="_images/5c3c3e67f990bb7b7520885b2eaab479405710ac2330b89e123720eb17d07cf1.png" />
+<img alt="_images/26db44f37d1e8b6164816d177a15f78a249ba0285df10aa04ec259d37bf8288a.png" src="_images/26db44f37d1e8b6164816d177a15f78a249ba0285df10aa04ec259d37bf8288a.png" />
 </div>
 </div>
 <p>An even more differentiated graphical view of the clustering quality can be generated if we visualize the silhouette scores in ascending order for each estimated cluster. In this way, we can see in which clusters the highest scores occur and in which clusters, on the other hand, individual less good assignments take place. We also look at the appropriate graph for our example and see that the cluster in the lower left corner has the highest silhouette scores. This makes sense, since it is further away from the other two clusters, which results in a better delineation. We also see that a negative silhouette score is realized for the cluster in the middle. This is the single data point that is very close to the cluster in the left corner. The idea of the Silhouette Score can of course be adapted for other distance measures. In addition, other metrics can be used to evaluate the cluster assignment. However, the operation of most metrics is similar in principle to the Silhouette Score, which is why we refrain from further illustrations.</p>
@@ -2447,7 +2466,7 @@ S(i) = \frac{b(i) - a(i)}{\max \lbrace a(i), b(i)\rbrace}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/7c04be1a685f777f2d0ad86ed72411ec061549ca13d63e5e6436437e565c43bc.png" src="_images/7c04be1a685f777f2d0ad86ed72411ec061549ca13d63e5e6436437e565c43bc.png" />
+<img alt="_images/d5056beeb623e9cbd9f13b5806644fe1ec9c6834dc861ce47e5fb1d5a184dfc0.png" src="_images/d5056beeb623e9cbd9f13b5806644fe1ec9c6834dc861ce47e5fb1d5a184dfc0.png" />
 </div>
 </div>
 <p>K-means clustering also has some potential drawbacks, e.g., every observation must be included in one cluster. This can be problematic as data sets may include outlier observations which do not share large similarities to any of the other observations. Examples for algorithms which include a category for outlier categories are the DBSCAN or HDBSCAN algorithm.</p>
@@ -2493,6 +2512,15 @@ S(i) = \frac{b(i) - a(i)}{\max \lbrace a(i), b(i)\rbrace}
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Multivariate analysis - dependence matters!</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="06_machine_learning_in_finance.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Machine learning in finance</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
