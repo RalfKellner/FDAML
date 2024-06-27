@@ -701,8 +701,8 @@ R^2 = 1 - \frac{\sum_i \left( y_i - \hat{y}_i \right)^2}{\sum_i \left( y_i - \ba
 Dep. Variable:                      y   R-squared:                       0.418
 Model:                            OLS   Adj. R-squared:                  0.410
 Method:                 Least Squares   F-statistic:                     51.87
-Date:                Wed, 26 Jun 2024   Prob (F-statistic):           2.57e-25
-Time:                        16:37:55   Log-Likelihood:                 725.28
+Date:                Thu, 27 Jun 2024   Prob (F-statistic):           2.57e-25
+Time:                        08:48:09   Log-Likelihood:                 725.28
 No. Observations:                 221   AIC:                            -1443.
 Df Residuals:                     217   BIC:                            -1429.
 Df Model:                           3                                         
@@ -741,8 +741,8 @@ Notes:
 Dep. Variable:                      y   R-squared:                       0.418
 Model:                            OLS   Adj. R-squared:                  0.410
 Method:                 Least Squares   F-statistic:                     51.92
-Date:                Wed, 26 Jun 2024   Prob (F-statistic):           2.47e-25
-Time:                        16:37:55   Log-Likelihood:                 725.28
+Date:                Thu, 27 Jun 2024   Prob (F-statistic):           2.47e-25
+Time:                        08:48:09   Log-Likelihood:                 725.28
 No. Observations:                 221   AIC:                            -1443.
 Df Residuals:                     217   BIC:                            -1429.
 Df Model:                           3                                         
@@ -1073,7 +1073,9 @@ memory usage: 1.4 MB
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R2 score for training data: 0.6093
-R2 score for training data: 0.5958
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R2 score for training data: 0.5958
 </pre></div>
 </div>
 </div>
@@ -2388,12 +2390,12 @@ L\left( C_1, ..., C_k, X \right) = \sum_{k = 1}^K W \left( C_k \right) = \sum_{k
 <p>After cluster allocation, the K-means algorithm has to find the best value for <span class="math notranslate nohighlight">\(K\)</span>. For this purpose, the quality of the allocation found in each case must be quantified and compared with the other allocations. An example for a corresponding measure is the silhouette score of an observation. Here, on the one hand, the average squared Euclidean distance of the <span class="math notranslate nohighlight">\(i\)</span>-th observation to all other observations within the cluster of <span class="math notranslate nohighlight">\(i\)</span> is determined.</p>
 <div class="math notranslate nohighlight">
 \[
-a(i) = \frac{1}{| C_k| - 1} \sum_{l \in C_k, l \neq i} \sum_{j = 1}^p \left( x_{ij} - x_{lj} \right)^2, i \in C_k
+a(i) = \frac{1}{| C_k| - 1} \sum_{l \in C_k, l \neq i} \sqrt{ \sum_{j = 1}^p \left( x_{ij} - x_{lj} \right)^2}, i \in C_k
 \]</div>
-<p>In addition, the average squared Euclidean distance of the <span class="math notranslate nohighlight">\(i\)</span>th observation to the nearest cluster is determined:</p>
+<p>In addition, the average squared Euclidean distance of the <span class="math notranslate nohighlight">\(i\)</span>-th observation to the nearest cluster is determined:</p>
 <div class="math notranslate nohighlight">
 \[
-b(i) = \min_{C_q} \frac{1}{| C_q| - 1} \sum_{l \in C_q, i \neq l} \sum_{j = 1}^p \left( x_{ij} - x_{lj} \right)^2, i \not\in C_q
+b(i) = \min_{C_q} \frac{1}{| C_q|} \sum_{l \in C_q, i \neq l} \sqrt{ \sum_{j = 1}^p \left( x_{ij} - x_{lj} \right)^2 }, i \not\in C_q
 \]</div>
 <p>The silhouette score for the <span class="math notranslate nohighlight">\(i\)</span>-th observation is given by:</p>
 <div class="math notranslate nohighlight">
@@ -2443,7 +2445,7 @@ S(i) = \frac{b(i) - a(i)}{\max \lbrace a(i), b(i)\rbrace}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/26db44f37d1e8b6164816d177a15f78a249ba0285df10aa04ec259d37bf8288a.png" src="_images/26db44f37d1e8b6164816d177a15f78a249ba0285df10aa04ec259d37bf8288a.png" />
+<img alt="_images/5c3c3e67f990bb7b7520885b2eaab479405710ac2330b89e123720eb17d07cf1.png" src="_images/5c3c3e67f990bb7b7520885b2eaab479405710ac2330b89e123720eb17d07cf1.png" />
 </div>
 </div>
 <p>An even more differentiated graphical view of the clustering quality can be generated if we visualize the silhouette scores in ascending order for each estimated cluster. In this way, we can see in which clusters the highest scores occur and in which clusters, on the other hand, individual less good assignments take place. We also look at the appropriate graph for our example and see that the cluster in the lower left corner has the highest silhouette scores. This makes sense, since it is further away from the other two clusters, which results in a better delineation. We also see that a negative silhouette score is realized for the cluster in the middle. This is the single data point that is very close to the cluster in the left corner. The idea of the Silhouette Score can of course be adapted for other distance measures. In addition, other metrics can be used to evaluate the cluster assignment. However, the operation of most metrics is similar in principle to the Silhouette Score, which is why we refrain from further illustrations.</p>
@@ -2466,7 +2468,7 @@ S(i) = \frac{b(i) - a(i)}{\max \lbrace a(i), b(i)\rbrace}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d5056beeb623e9cbd9f13b5806644fe1ec9c6834dc861ce47e5fb1d5a184dfc0.png" src="_images/d5056beeb623e9cbd9f13b5806644fe1ec9c6834dc861ce47e5fb1d5a184dfc0.png" />
+<img alt="_images/7c04be1a685f777f2d0ad86ed72411ec061549ca13d63e5e6436437e565c43bc.png" src="_images/7c04be1a685f777f2d0ad86ed72411ec061549ca13d63e5e6436437e565c43bc.png" />
 </div>
 </div>
 <p>K-means clustering also has some potential drawbacks, e.g., every observation must be included in one cluster. This can be problematic as data sets may include outlier observations which do not share large similarities to any of the other observations. Examples for algorithms which include a category for outlier categories are the DBSCAN or HDBSCAN algorithm.</p>
